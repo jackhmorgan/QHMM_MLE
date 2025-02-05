@@ -1,8 +1,11 @@
 from .result_getter import result_getter
 from qiskit_ibm_runtime import SamplerV2
-from qiskit import transpile
+from qiskit import transpile, QuantumCircuit
 import numpy as np
 
+# This class `sampler_result_getter` is designed to generate sequences from a quantum circuit using a
+# sampler, and calculate the log likelihood of a given sequence based on the circuit execution
+# results.
 class sampler_result_getter(result_getter):
     def __init__(self,
                  sampler: SamplerV2,
@@ -14,7 +17,20 @@ class sampler_result_getter(result_getter):
         self.num_shots = num_shots
         self.max_shots = max_shots
 
-    def generate_sequence(self, circuit):
+    def generate_sequence(self, 
+                          circuit : QuantumCircuit):
+        """
+        The function generates a sequence of measurement outcomes from a quantum circuit executed on a
+        backend.
+        
+        :param circuit: The `generate_sequence` method takes a quantum circuit as input
+        and generates a sequence of measurement outcomes from running the circuit on a quantum backend.
+        The method transpiles the circuit, runs it on the backend, retrieves the results, and then
+        extracts a sequence of measurement outcomes from the results.
+        :return: The `generate_sequence` function returns a list of integers representing the
+        measurement outcomes of a quantum circuit that has been transpiled and executed on a backend
+        using a sampler.
+        """
         transpiled = transpile(circuit, self.backend)
         job = self.sampler.run([transpiled], shots=1)
         results = job.result()[0].data
@@ -23,7 +39,23 @@ class sampler_result_getter(result_getter):
             sequence.append(int(results[key].array[0,0]))
         return sequence
 
-    def log_likelihood(self, circuit, sequence):
+    def log_likelihood(self, 
+                       circuit : QuantumCircuit, 
+                       sequence : list[int]):
+        """
+        This function calculates the log likelihood of a given quantum circuit generating a specific
+        sequence of measurement outcomes.
+        
+        :param circuit: The `log_likelihood` method calculates the log likelihood
+        of a given sequence based on the execution results of a quantum circuit on a backend. The method
+        transpiles the circuit, runs it on the backend, and then compares the results to the expected
+        sequence to calculate the likelihood
+        :param sequence: The 'sequence' parameter is a list of integers corresponding to the measurement
+        outcomes of each time step we are evaluating the log_likelihood of.
+        :return: The `log_likelihood` method returns the natural logarithm of the probability calculated
+        based on the number of shots in the circuit that match the given sequence. If the probability is
+        0, it returns negative infinity.
+        """
         super().log_likelihood(sequence)
         transpiled = transpile(circuit, self.backend)
         num_shots_circuit = 0

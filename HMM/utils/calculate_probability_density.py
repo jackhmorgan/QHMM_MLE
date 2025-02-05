@@ -2,10 +2,25 @@ from .calculate_steady_state import calculate_steady_state
 from itertools import combinations_with_replacement
 import numpy as np
 
-def calculate_probability_density(transition_matrix, 
-                                  volatilities,
+def calculate_probability_density(transition_matrix : np.ndarray | list[list[float]], 
+                                  volatilities : list[float],
                                   k):
-
+    """
+    This function calculates the conditional probability densities of integrated volatilities given a
+    transition matrix, volatilities, and a specified sequence length.
+    
+    :param transition_matrix: The `transition_matrix` parameter represents the transition matrix of the 
+    latent Markovian process
+    :param volatilities: The `volatilities` parameter in the `calculate_probability_density` function
+    represents a list of spot volatilities. These volatilities are used in the calculation of
+    conditional probability densities based on transition probabilities defined in the transition matrix
+    :param k: The parameter `k` in the `calculate_probability_density` function represents the number of 
+    spot volatilities that correspond to a single integrated volatility.
+    :return: The function `calculate_probability_density` returns a dictionary containing conditional
+    probability densities. The keys of the dictionary represent spot volatilities, and the values are
+    dictionaries where the keys are integrated volatilities and the values are the corresponding
+    conditional probabilities.
+    """
     steady_state = calculate_steady_state(transition_matrix)
     ncl = transition_matrix.shape[0]
 

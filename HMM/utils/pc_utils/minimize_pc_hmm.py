@@ -1,20 +1,20 @@
-from scipy.optimize import minimize
-import time
 import numpy as np
-from ...QHMM import QHMM
+import time
+from scipy.optimize import minimize
+from ...PC_HMM import PC_HMM
 
-def minimize_qhmm(model : QHMM,
+def minimize_pc_hmm(model : PC_HMM,
                   sequence : list,
                   theta_0 : list | np.ndarray,
                   max_iter : int = 100,
                   tol : float = 1e-6):
     """
-    The function `minimize_qhmm` optimizes a quantum hidden Markov model using a given model, sequence data,
+    The function `minimize_pc_hmm` optimizes a parameterized hidden Markov model using a given model, sequence data,
     initial parameters, maximum iterations, and tolerance level.
     
-    :param theta: The `theta` parameter in the `minimize_qhmm` function represents the initial values
+    :param theta: The `theta` parameter in the `minimize_pc_mm` function represents the initial values
     of the parameters that will be optimized during the training process. These parameters are specific
-    to the quantm hidden Markov model (QHMM) being used in the function. The optimization algorithm will adjust
+    to the parameterized case hidden Markov model being used in the function. The optimization algorithm will adjust
     these parameters to maximize
     :return: The function `minimize_qhmm` returns three values: 
     1. `trained_theta`: The optimized theta values for the model after training on the given sequence.
@@ -32,9 +32,11 @@ def minimize_qhmm(model : QHMM,
         for param in theta:
             if param < 0:
                 penalty += (1-param)*penalizer
+                print('penalty, param < 0 : ', param)
             
-            if param > 8*np.pi:
-                penalty += (1+param-8*np.pi)*penalizer
+            if param > 1:
+                penalty += param*penalizer
+                print('penalty, param > 1: ', param)
 
         if penalty == 0:
             model.update_theta(theta)

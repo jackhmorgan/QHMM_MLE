@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.linalg import null_space
 
-def calculate_steady_state(transition_matrix):
+def calculate_steady_state(transition_matrix : np.ndarray | list[list]):
         """
         The function calculates the steady state of the latent state Markov chain based on the transition matrix.
         :return: The `calculate_steady_state` function returns the steady state probabilities of a

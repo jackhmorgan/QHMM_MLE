@@ -3,6 +3,9 @@ from .utils.pc_utils import calculate_pc_volatilities, pc_theta_to_transition_ma
 from .utils import calculate_emission_matrix, calculate_steady_state
 from hmmlearn.hmm import CategoricalHMM
 
+# The `PC_HMM` class extends `HMM` and implements methods for updating model parameters, calculating
+# log likelihood, and generating sequences based on a hidden Markov model with principal component
+# analysis.
 class PC_HMM(HMM):
     def __init__(self,
                  theta=None,
@@ -10,6 +13,19 @@ class PC_HMM(HMM):
                  ncl=None,
                  observations=None,
     ):
+        """
+        This Python function initializes attributes `k`, `observations`, and `ncl`, and updates `theta`
+        if it is not None.
+        
+        :param theta: Theta is a parameter that can be passed to the constructor of the class. If a
+        value is provided for theta when creating an instance of the class, the `update_theta` method
+        will be called with that value to update the theta attribute of the instance
+        :param k: The `k` parameter determines the number of spot volatilities for every integrated
+        volatility, defaults to 1.
+        :param ncl: The `ncl` parameter determines the number of latent states.
+        :param observations: The `observations` parameter determines the center of the observable bins
+        associated with each emitted state.
+        """
         super().__init__()
         self.k = k
         self.observations = observations

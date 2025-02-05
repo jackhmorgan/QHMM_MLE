@@ -1,6 +1,22 @@
 from scipy.stats import ncx2, gamma
+import numpy as np
 
-def calculate_pc_volatilities(theta, ncl):
+def calculate_pc_volatilities(theta : np.ndarray | list, ncl : int):
+    """
+    The function calculates the hidden state volatilities as percentiles of a gamma distribution 
+    based on given parameters.
+    
+    :param theta: The `theta` parameter is a numpy array or list containing three values - `alpha`,
+    `beta`, and `sigma`. These values are used in the calculation of `a` and `b` which are then used to
+    create a gamma distribution with parameters `a` and `scale=1/b
+    :type theta: np.ndarray | list
+    :param ncl: The `ncl` parameter represents the number of latent states, and thus the number of percentiles 
+    percentiles to compute based on the given parameters `theta`.
+    :type ncl: int
+    :return: The function `calculate_pc_volatilities` returns a list of quantiles calculated using the
+    parameters `theta` and `ncl`. The quantiles are calculated based on the inverse of the cumulative
+    distribution function of a gamma distribution with parameters `a` and `scale`.
+    """
     alpha, beta, sigma = theta
     a = 2*alpha*beta / (sigma**2)
     b = 2 *alpha / (sigma**2)

@@ -7,17 +7,50 @@ from .utils.npc_utils.calculate_npc_volatilities import calculate_npc_volatiliti
 from .utils import calculate_emission_matrix, calculate_steady_state
 from hmmlearn.hmm import CategoricalHMM
 
+# The `NPC_HMM` class is a subclass of `HMM` that implements a Hidden Markov Model with specific
+# functionalities for Non-Player Characters in a game environment.
 class NPC_HMM(HMM):
     def __init__(self,
-                 theta=None,
-                 k=1,
-                 ncl=None,
-                 observations=None,
-                 volatilities = None,
-                 alpha = None,
-                 delta = None,
-                 mean = 0
+                 theta : list | np.ndarray = None,
+                 k : int = 1,
+                 ncl : int = None,
+                 observations : list | np.ndarray = None,
+                 volatilities : list | np.ndarray = None,
+                 alpha : float = None,
+                 delta : float = None,
+                 mean : float = 0
                  ):
+        """
+        This Python function initializes a non-parameterized hidden Markov model object with specified parameters, including theta, k, ncl,
+        observations, volatilities, alpha, delta, and mean, with default values and calculations for
+        certain parameters if not provided.
+        
+        :param theta: The `theta` parameter is a list or numpy array representing the model parameters.
+        :type theta: list | np.ndarray
+        :param k: The parameter `k` is the number of spot volatilities per time step. If not provided 
+        explicitly, defaults to 1.
+        :type k: int (optional)
+        :param ncl: The `ncl` parameter represents the number of classical latent states. If
+        the `ncl` parameter is not provided when initializing an instance of the class, it will be
+        calculated based on the number of parameters provided in `theta`.
+        :type ncl: int
+        :param observations: Observations are the data points that occupy the discrete number of observable 
+        states.
+        :type observations: list | np.ndarray
+        :param volatilities: The `volatilities` parameter in the `__init__` method is used to specify a
+        list or numpy array of volatilities. If this parameter is not provided, the code calculates the
+        volatilities using the `calculate_npc_volatilities` function based on the values of `alpha' and 'delta'.
+        :type volatilities: list | np.ndarray
+        :param alpha: Alpha is a parameter used in the calculation of the volatility value associated with each
+        observation bin.
+        :type alpha: float
+        :param delta: The `delta` parameter is used in the calculation of the volatility value associated with 
+        each observation bin.
+        :type delta: float
+        :param mean: The `mean` parameter is a float that represents the mean of the normal distributions that
+        are used to determine the emission probabilities.
+        :type mean: float (optional)
+        """
         self.k = k
         self.observations = observations
         self.mean = mean
@@ -33,11 +66,20 @@ class NPC_HMM(HMM):
                                                       alpha,
                                                       delta)            
         self.volatilities = volatilities
-        
+         
         if not theta is None:
             self.update_theta(theta=theta)
 
-    def calculate_transition_matrix(self, theta):
+    def calculate_transition_matrix(self, 
+                                    theta : np.ndarray | list[list]):
+        """
+        The function calculates a transition matrix based on a given theta parameter.
+        
+        :param theta: Parameters used to construct the loosely parameterized transition matrix.
+        :return: The function `calculate_transition_matrix` returns a transition matrix based on the
+        input parameters int `theta`. The transition matrix is a square matrix with dimensions `ncl x ncl`,
+        where `ncl` is the number of latent states.
+        """
         matrix = np.zeros((self.ncl, self.ncl), dtype=np.float64)
         index = 0
         for row in range(self.ncl):
@@ -49,6 +91,14 @@ class NPC_HMM(HMM):
 
     def update_theta(self,
                      theta):
+        """
+        The function `update_theta` updates the parameters of a Hidden Markov Model using the given
+        theta values.
+        
+        :param theta: The `theta` parameter in the `update_theta` method represents the transition
+        probabilities between different states in a Hidden Markov Model (HMM). It is a list of length
+        `ncl*(ncl-1)`, where `ncl` is the number of hidden states in the HMM
+        """
         if not len(theta) == (self.ncl*(self.ncl-1)):
             raise ValueError('Invalid theta length and ncl')
         
