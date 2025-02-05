@@ -70,7 +70,6 @@ initial_state = QuantumCircuit(1)
 initial_state.h(0)
 
 ansatz = RealAmplitudes(num_qubits=3, reps=1)
-
 theta_gen = [np.random.uniform(2*np.pi, 4 * np.pi) for _ in range(ansatz.num_parameters)]
 theta_0 = [3*np.pi for _ in range(ansatz.num_parameters)]
 

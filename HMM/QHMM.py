@@ -60,9 +60,12 @@ class QHMM(HMM):
         result = self.result_getter.generate_sequence(circuit)
         return result
     
-    def log_likelihood(self, sequence):
+    def log_likelihood(self, sequence, save_state=False):
         super().log_likelihood(sequence)
+        if not save_state:
+            if hasattr(self.result_getter, 'save_state'):
+                save_state = self.result_getter.save_state
         length = len(sequence)
-        circuit = self.construct_circuit(length, save_state=True)
+        circuit = self.construct_circuit(length, save_state=save_state)
         result = self.result_getter.log_likelihood(circuit, sequence)
         return result
