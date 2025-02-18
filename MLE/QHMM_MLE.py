@@ -9,7 +9,7 @@ import time
 
 from HMM import QHMM
 from HMM.utils import calculate_mse
-from HMM.utils.qhmm_utils import qiskit_simulator_result_getter
+from HMM.utils.qhmm_utils import aer_simulator_result_getter
 from qiskit.circuit.library import RealAmplitudes
 from qiskit.circuit import ParameterVector
 from qiskit import QuantumCircuit
@@ -64,7 +64,7 @@ while os.path.exists(path):
     path = filename + " (" + str(counter) + ")" + extension
     counter += 1
 
-result_getter = qiskit_simulator_result_getter()
+result_getter = aer_simulator_result_getter()
 
 initial_state = QuantumCircuit(1)
 initial_state.h(0)

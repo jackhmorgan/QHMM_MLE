@@ -17,9 +17,8 @@ limitations under the License.
 import numpy as np
 import time
 from scipy.optimize import minimize
-from ...NPC_HMM import NPC_HMM
 
-def minimize_pc_hmm(model : NPC_HMM,
+def minimize_pc_hmm(model,
                   sequence : list,
                   theta_0 : list | np.ndarray,
                   max_iter : int = 100,

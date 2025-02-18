@@ -14,12 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-from .qiskit_simulator_result_getter import aer_simulator_result_getter
+from .aer_simulator_result_getter import aer_simulator_result_getter
 from .result_getter import result_getter
 from .sampler_result_getter import sampler_result_getter
 from .minimize_qhmm import minimize_qhmm
+from .statevector_result_getter import statevector_result_getter
+from .hellinger import hellinger_distance, hellinger_fidelity
 
 __main__ = ['aer_simulator_result_getter',
             'result_getter',
             'sampler_result_getter',
-            'minimize_qhmm']
+            'minimize_qhmm',
+            'hellinger_distance',
+            'hellinger_fidelity',
+            'statevector_result_gettter']

@@ -131,7 +131,12 @@ class QHMM(HMM):
         if not save_state:
             if hasattr(self.result_getter, 'save_state'):
                 save_state = self.result_getter.save_state
-        length = len(sequence)
+
+        if isinstance(sequence, dict):
+            length = len(next(iter(sequence.keys())))
+        else: 
+            length = len(sequence)
+    
         circuit = self.construct_circuit(length, save_state=save_state)
         result = self.result_getter.log_likelihood(circuit, sequence)
         return result

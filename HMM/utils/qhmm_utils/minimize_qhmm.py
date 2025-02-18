@@ -17,13 +17,13 @@ limitations under the License.
 from scipy.optimize import minimize
 import time
 import numpy as np
-from ...QHMM import QHMM
 
-def minimize_qhmm(model : QHMM,
+def minimize_qhmm(model,
                   sequence : list,
                   theta_0 : list | np.ndarray,
                   max_iter : int = 100,
-                  tol : float = 1e-6):
+                  tol : float = 1e-6,
+                  ):
     """
     The function `minimize_qhmm` optimizes a quantum hidden Markov model using a given model, sequence data,
     initial parameters, maximum iterations, and tolerance level.
@@ -44,33 +44,68 @@ def minimize_qhmm(model : QHMM,
     def neg_log_likelihood(theta):
         penalty = 0
         likelihood = 0
-        penalizer = len(sequence)**4
-        for param in theta:
-            if param < 0:
-                penalty += (1-param)*penalizer
+        # penalizer = len(sequence)**4
+        # for param in theta:
+        #     if param < 0:
+        #         penalty += (1-param)*penalizer
             
-            if param > 8*np.pi:
-                penalty += (1+param-8*np.pi)*penalizer
+        #     if param > 8*np.pi:
+        #         penalty += (1+param-8*np.pi)*penalizer
 
         if penalty == 0:
             model.update_theta(theta)
             likelihood = model.log_likelihood(sequence)
         
-        if not likelihood == 0:
-            training_curve.append(-likelihood)
+        if not (likelihood == 0 or likelihood == float('-inf')) :
+            if len(training_curve)==0:
+                training_curve.append(-likelihood)
+            if -likelihood < training_curve[-1]:
+                training_curve.append(-likelihood)
 
+        print(-likelihood+penalty)
         return -likelihood + penalty
     
     start_time = time.time()
     # Optimize
+    initial_simplex = generate_initial_simplex(theta_0, perturbation_size=1)
     result = minimize(neg_log_likelihood, 
                       theta_0, 
                       method='Nelder-Mead',
+                      #method='COBYLA',
                       tol=tol,
-                      options = {'maxiter': max_iter},
+                      options = {'maxiter': max_iter,
+                                 'initial_simplex' : initial_simplex,
+                                 },
                       )
     training_time = time.time() - start_time
     
     trained_theta = result.x.tolist()
+    nit = result.nit
 
-    return trained_theta, training_time, training_curve
+    return trained_theta, training_time, nit, training_curve
+
+
+def generate_initial_simplex(theta_0, perturbation_size=0.05):
+    """
+    Generates an initial simplex for the Nelder-Mead algorithm.
+
+    Parameters:
+        theta_0 (np.array): Initial guess (starting point) as a 1D array.
+        perturbation_size (float): Size of the perturbation for each dimension.
+
+    Returns:
+        np.array: A (n+1, n) array representing the initial simplex.
+    """
+    n = len(theta_0)  # Number of dimensions
+    simplex = np.zeros((n + 1, n))  # Initialize simplex matrix
+
+    # First vertex is the initial guess
+    simplex[0] = theta_0
+
+    # Generate the remaining vertices by perturbing each dimension
+    for i in range(n):
+        vertex = theta_0.copy()
+        vertex[i] += perturbation_size  # Perturb the i-th dimension
+        simplex[i + 1] = vertex
+
+    return simplex
