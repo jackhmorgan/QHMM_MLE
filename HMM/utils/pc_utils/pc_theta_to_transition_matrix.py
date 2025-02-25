@@ -42,10 +42,11 @@ def pc_theta_to_transition_matrix(theta : tuple | list | np.ndarray,
     alpha, beta, sigma = theta
     volatility_bins = calculate_volatility_bins(volatilities)
     ncl = len(volatilities)
+    time_unit = 1
 
     def calculate_transition_probabilities(V0):
         c = 2*alpha
-        c /= sigma**2 * (1-np.exp(-alpha/k))
+        c /= sigma**2 * (1-np.exp(-alpha/(time_unit*k)))
 
         # u = c*V0*np.exp(-self.alpha)
         # v = c*V1
@@ -58,7 +59,7 @@ def pc_theta_to_transition_matrix(theta : tuple | list | np.ndarray,
         # transition_probability *= iq
 
         df = 4*alpha*beta / (sigma**2)
-        nc = 2*c*V0*np.exp(-alpha/k)
+        nc = 2*c*V0*np.exp(-alpha/(time_unit*k))
         dist = ncx2(df, nc)
 
         transition_probabilities = []        

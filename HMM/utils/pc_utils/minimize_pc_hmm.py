@@ -44,15 +44,18 @@ def minimize_pc_hmm(model,
         penalty = 0
         likelihood = 0
         penalizer = len(sequence)**4
+        alpha, beta, sigma = theta
+        if 2*alpha*beta <= sigma:
+            penalty += penalizer*(1+sigma- 2*alpha*beta)
+
         for param in theta:
             if param < 0:
                 penalty += (1-param)*penalizer
                 print('penalty, param < 0 : ', param)
-            
-            if param > 1:
-                penalty += param*penalizer
-                print('penalty, param > 1: ', param)
 
+#            if param > 1:
+#                penalty += (param)*penalizer
+#                print('penalty, param > 1 : ', param)
         if penalty == 0:
             model.update_theta(theta)
             likelihood = model.log_likelihood(sequence)
@@ -60,7 +63,7 @@ def minimize_pc_hmm(model,
         if not likelihood == 0:
             training_curve.append(-likelihood)
 
-        print(-likelihood+penalty)
+        print('theta: ', theta, 'obj func: ',-likelihood+penalty)
         return -likelihood + penalty
     
     start_time = time.time()
@@ -68,6 +71,7 @@ def minimize_pc_hmm(model,
     result = minimize(neg_log_likelihood, 
                       theta_0, 
                       method='Nelder-Mead',
+                      #method='COBYLA',
                       tol=tol,
                       options = {'maxiter': max_iter},
                       )

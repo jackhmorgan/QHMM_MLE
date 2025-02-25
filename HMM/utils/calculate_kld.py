@@ -6,7 +6,7 @@ def generate_sequences(model, n_sequences, length):
     sequences = []
     for _ in range(n_sequences):
         seq = model.generate_sequence(length)
-        if not type(seq, list):
+        if not isinstance(seq, list):
             seq = seq.tolist()
         sequences.append(seq)
     return sequences
