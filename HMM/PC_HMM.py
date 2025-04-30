@@ -18,6 +18,7 @@ from .HMM import HMM
 from .utils.pc_utils import calculate_pc_volatilities, pc_theta_to_transition_matrix
 from .utils import calculate_emission_matrix, calculate_steady_state
 from hmmlearn.hmm import CategoricalHMM
+import numpy as np
 
 # The `PC_HMM` class extends `HMM` and implements methods for updating model parameters, calculating
 # log likelihood, and generating sequences based on a hidden Markov model with principal component
@@ -68,7 +69,8 @@ class PC_HMM(HMM):
                                params='',
                                )
         model.startprob_ = steady_state
-        model.transmat_ = transition_matrix
+        tm = transition_matrix
+        model.transmat_ = np.linalg.matrix_power(tm, self.k)
         model.emissionprob_ = emission_matrix.T
 
         self._model = model

@@ -16,6 +16,8 @@ limitations under the License.
 
 from .calculate_npc_volatilities import calculate_npc_volatilities
 from .npc_theta_to_transition_matrix import npc_theta_to_transition_matrix
+from .minimize_npc_hmm import minimize_npc_hmm
 
 __all__ = ['calculate_npc_volatilities',
-           'npc_theta_to_transition_matrix']
+           'npc_theta_to_transition_matrix',
+           'minimize_npc_hmm']

@@ -18,7 +18,7 @@ import numpy as np
 import time
 from scipy.optimize import minimize
 
-def minimize_pc_hmm(model,
+def minimize_npc_hmm(model,
                   sequence : list,
                   theta_0 : list | np.ndarray,
                   max_iter : int = 100,
@@ -68,6 +68,7 @@ def minimize_pc_hmm(model,
         if not likelihood == 0:
             training_curve.append(-likelihood)
 
+        print(-likelihood+penalty)
         return -likelihood + penalty
     
     start_time = time.time()
@@ -81,5 +82,6 @@ def minimize_pc_hmm(model,
     training_time = time.time() - start_time
     
     trained_theta = result.x.tolist()
+    nit = result.nit
 
-    return trained_theta, training_time, training_curve
+    return trained_theta, training_time, nit, training_curve

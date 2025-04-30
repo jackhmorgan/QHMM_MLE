@@ -16,12 +16,6 @@ parser.add_argument(
     help='Number of repetitions',
 )
 
-parser.add_argument(
-    '--n_observations', 
-    type=int,  # Convert each input to a float
-    help='Number of observation_bins',
-)
-
 # Argument 3: String
 parser.add_argument(
     '--path', 
@@ -57,7 +51,6 @@ args = parser.parse_args()
 
 path = args.path if args.path else 'MLE/ClassicalConvergence/spy_pc_test.json'
 k = args.k if args.k else 4 
-no = args.n_observations if args.n_observations else 4 
 ncl = args.ncl if args.ncl else 4 
 n_samples = args.n_samples if args.n_samples else 10
 max_iter = args.max_iter if args.max_iter else 100
@@ -79,13 +72,14 @@ log_returns = log_returns.dropna().reset_index(drop=True)
 description = log_returns['log_returns'].describe()
 
 num_iterations = 5
+no = 4
 bins = [log_returns['log_returns'].quantile((i+1)/(no)) for i in range(no-1)]
 observations = [log_returns['log_returns'].quantile((i+1)/(no+1)) for i in range(no)]
 
 
 sequence = []
 
-for lr in log_returns['log_returns']:
+for lr in df['log_returns']:
     sorted = False
     for i, edge in enumerate(bins):
         if lr > edge and sorted==False:
@@ -105,14 +99,8 @@ data['ncl'] = ncl
 data['k'] = k
 data['max_iter'] = max_iter
 data['tol'] = tol
-data['observations'] = observations
-data['no'] = no
-
-with open(path, "w") as outfile: 
-        json.dump(data, outfile, indent=4)
 
 for iteration in range(n_samples):
-    data[iteration] = {}
 
     done = False
     while done==False:
@@ -130,9 +118,9 @@ for iteration in range(n_samples):
                 sequence=sequence,
                 theta_0=theta_0,
                 max_iter=max_iter,
-                tol=1e-5)
+                tol=1e-6)
     
-    data[iteration]['pc'] = {'theta_0' : theta_0,
+    data[iteration] = {'theta_0' : theta_0,
                        'trained_theta' : trained_theta,
                        'training_time' : training_time,
                        'nit' : nit,

@@ -45,25 +45,50 @@ def minimize_pc_hmm(model,
         likelihood = 0
         penalizer = len(sequence)**4
         alpha, beta, sigma = theta
-        if 2*alpha*beta <= sigma:
-            penalty += penalizer*(1+sigma- 2*alpha*beta)
+        
+        #if alpha < 3:
+        #    penalty += penalizer*(1+3-alpha)
+            
+        #if alpha > 10:
+        #    penalty += penalizer*(1+alpha-10)
+            
+        #if beta < 0.001:
+        #    penalty += penalizer*(1+0.001-beta)
+        
+        #if beta > 0.1:
+        #    penalty += penalizer*(1+beta-0.01)
+            
+        #if sigma < 0.1:
+        #    penalty += penalizer*(1+0.1-sigma)
+        
+        #if sigma > 1:
+        #    penalty += penalizer*(sigma)
+            
+        #if 2*alpha*beta <= sigma**2:
+        #    penalty += penalizer*(1+sigma- 2*alpha*beta)
 
         for param in theta:
             if param < 0:
                 penalty += (1-param)*penalizer
-                print('penalty, param < 0 : ', param)
+                #print('penalty, param < 0 : ', param)
 
 #            if param > 1:
 #                penalty += (param)*penalizer
 #                print('penalty, param > 1 : ', param)
+
+        penalty = abs(penalty)
+    
         if penalty == 0:
             model.update_theta(theta)
             likelihood = model.log_likelihood(sequence)
         
-        if not likelihood == 0:
-            training_curve.append(-likelihood)
+        if not (likelihood == 0 or likelihood == float('-inf')) :
+            if len(training_curve)==0:
+                training_curve.append(-likelihood)
+            if -likelihood < training_curve[-1]:
+                training_curve.append(-likelihood)
 
-        print('theta: ', theta, 'obj func: ',-likelihood+penalty)
+        #print('theta: ', theta, 'obj func: ',-likelihood+penalty)
         return -likelihood + penalty
     
     start_time = time.time()

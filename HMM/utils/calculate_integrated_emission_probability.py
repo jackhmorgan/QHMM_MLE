@@ -36,7 +36,7 @@ def calculate_integrated_emission_probability(volatilities,
 
         for i, integrated_volatility in enumerate(integrated_volatilities):
             # calculate std
-            sigma = np.sqrt(integrated_volatility)
+            sigma = integrated_volatility #np.sqrt(integrated_volatility)
 
             #emission_probs = [norm.pdf(value, scale=sigma) for value in self.observation_values]
             #emission_probs = emission_probs / np.sum(emission_probs)
