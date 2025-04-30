@@ -28,7 +28,6 @@ parser = argparse.ArgumentParser(description="Parse command line arguments")
 # Argument 1: List of numbers
 parser.add_argument(
     '--n_samples', 
-    nargs='+',  # Allow multiple arguments
     type=int,  # Convert each input to a float
     help='A list of numbers (space-separated)',
 )
@@ -42,19 +41,19 @@ parser.add_argument(
 
 parser.add_argument(
     '--len_sequence', 
-    type=float,  # Convert each input to a float
+    type=int,  # Convert each input to a float
     help='The length of each individual sample',
 )
 
 parser.add_argument(
     '--k', 
-    type=float,  # Convert each input to a float
+    type=int,  # Convert each input to a float
     help='The number of spot volatilities per integrated volatility',
 )
 
 parser.add_argument(
     '--ncl', 
-    type=float,  # Convert each input to a float
+    type=int,  # Convert each input to a float
     help='The number of classical latent states',
 )
 
@@ -149,8 +148,8 @@ for sample in range(n_samples):
     sequence = model_1.generate_sequence(n_samples)
 
     model_1_likelihood = model_1.log_likelihood(sequence)
-    model_2_likelihood = model_2.log_likelihood(sequence)
-    model_3_likelihood = model_3.log_likelihood(sequence)
+    model_2_likelihood = 1 #model_2.log_likelihood(sequence)
+    model_3_likelihood = 1 #model_3.log_likelihood(sequence)
     
     theta_trained_q, training_time_q, nit_q, training_curve_q = minimize_qhmm(model = model_3,
               sequence=sequence,

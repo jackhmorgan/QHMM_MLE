@@ -86,7 +86,7 @@ while os.path.exists(path):
     path = filename + " (" + str(counter) + ")" + extension
     counter += 1
 
-df = pd.read_csv('MLE/^SPX.csv')
+df = pd.read_csv('^SPX.csv')
 
 log_returns = pd.DataFrame({'log_returns': np.log(df['Close'].shift(-1) / df['Close'])})
 
