@@ -138,6 +138,8 @@ class NPC_HMM(HMM):
         self._model = model
 
     def log_likelihood(self, sequence):
+        if isinstance(sequence, list):
+            sequence = np.array(sequence).reshape(-1, 1)
         super().log_likelihood(sequence)
         return self._model.score(sequence)
     

@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+   http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,7 @@ from qiskit.quantum_info.operators.operator import Operator
 import numpy as np
 from qiskit_aer import AerSimulator
 from qiskit import transpile, QuantumCircuit
+from qiskit.quantum_info import Statevector
 
 # This class `aer_simulator_result_getter` uses the AerSimulator to generate sequences and calculate
 # log-likelihood for quantum circuits.
@@ -66,15 +67,21 @@ class statevector_result_getter(result_getter):
         negative infinity, otherwise, it returns the natural logarithm of the likelihood value.
         """
 
-        transpiled = transpile(circuit, backend=self.simulator)
+        #transpiled = transpile(circuit, backend=self.simulator)
         #params = circuit.parameters
+        
         bound_ansatz = circuit.data[2].operation #self.ansatz.assign_parameters(params)
-        result = self.simulator.run(transpiled).result()
+        initial_state = circuit.data[0].operation
+        #result = self.simulator.run(transpiled).result()
         likelihood = 1
         observed_qargs = [i for i in range(circuit.qregs[0].size, circuit.num_qubits)]
+        hidden_qargs = [i for i in range(circuit.qregs[0].size)]
+
+        sv = Statevector(data=QuantumCircuit(circuit.num_qubits))
+        sv = sv.evolve(initial_state, hidden_qargs)        
+
         for step, sample in enumerate(sequence):
-            if step==0:
-                sv = result.data()['step_'+str(step)]
+            sv = sv.evolve(bound_ansatz)
 
             probs = sv.probabilities(observed_qargs)
             likelihood *= probs[sample]
@@ -84,7 +91,8 @@ class statevector_result_getter(result_getter):
             proj = np.zeros(len(probs), dtype=complex)
             proj[sample] = 1 / np.sqrt(probs[sample])
             sv = sv.evolve(Operator(np.diag(proj), input_dims=sv.dims(observed_qargs), output_dims=sv.dims(observed_qargs)), qargs=observed_qargs)
-            sv = sv.evolve(bound_ansatz)
+            sv = sv.reset(observed_qargs)
+        
 
         if likelihood == 0:
             return float('-inf')

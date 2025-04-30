@@ -1,3 +1,19 @@
+'''
+Copyright 2025 Jack Morgan
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+'''
+
 from HMM import QHMM, PC_HMM, NPC_HMM
 from HMM.utils.qhmm_utils import minimize_qhmm
 from HMM.utils.npc_utils import minimize_npc_hmm
@@ -25,7 +41,7 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    '--sample_length', 
+    '--len_sequence', 
     type=float,  # Convert each input to a float
     help='The length of each individual sample',
 )
@@ -57,7 +73,7 @@ parser.add_argument(
 args = parser.parse_args()
 # Determine the number of time steps in our sample size
 path = args.path if args.path else 'MLE/ClassicalConvergence/pc_to_npc_to_qhmm_test.json'
-sample_length = args.sample_length if args.sample_length else 500 # 16 parameters x 100 
+len_sequence = args.len_sequence if args.len_sequence else 500 # 16 parameters x 100 
 n_samples = args.n_samples if args.n_samples else 100
 max_iter = args.max_iter if args.max_iter else 1000
 tol = args.tol if args.tol else 0.0001
@@ -100,7 +116,7 @@ data = {}
 
 
 data['gen_theta'] = theta_gen
-data['len_sequence'] = sample_length
+data['len_sequence'] = len_sequence
 data['ncl'] = ncl
 data['k'] = k
 
