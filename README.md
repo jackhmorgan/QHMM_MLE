@@ -1,6 +1,6 @@
 # Code for "On Quantum and Quantum-Inspired Maximum Likelihood Estimation and Filtering of Stochastic Volatility Models"
 
-This repository contains the code accompanying the paper by Ghysels, Morgan, and Mohammadbagherpoor.
+This repository contains the code accompanying the [paper of the same name](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5274549) by Ghysels, Morgan, and Mohammadbagherpoor.
 
 ## Repository Structure
 
