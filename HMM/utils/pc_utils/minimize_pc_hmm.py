@@ -95,8 +95,9 @@ def minimize_pc_hmm(model,
     # Optimize
     result = minimize(neg_log_likelihood, 
                       theta_0, 
-                      method='Nelder-Mead',
+                      #method='Nelder-Mead',
                       #method='COBYLA',
+                      method='SLSQP',
                       tol=tol,
                       options = {'maxiter': max_iter},
                       )

@@ -14,14 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-from .HMM import HMM
-from .NPC_HMM import NPC_HMM
-from .PC_HMM import PC_HMM
-from .QHMM import QHMM
-from .GARCH import GARCH
+from .minimize_GARCH import minimize_GARCH
 
-__main__ = ['HMM',
-            'NPC_HMM',
-            'PC_HMM',
-            'QHMM',
-            'GARCH']
+__all__ = ['minimize_GARCH']

@@ -25,7 +25,9 @@ from qiskit.quantum_info import Statevector
 # log-likelihood for quantum circuits.
 class statevector_result_getter(result_getter):
     def __init__(self,
-              ):       
+                 rescaling_factor : float = 1.0
+              ):    
+        self.rescaling_factor = rescaling_factor   
         self.simulator = AerSimulator()
         self.save_state = True
 
