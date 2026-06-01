@@ -70,11 +70,11 @@ def minimize_qhmm(model,
     initial_simplex = generate_initial_simplex(theta_0, perturbation_size=1)
     result = minimize(neg_log_likelihood, 
                       theta_0, 
-                      method='Nelder-Mead',
-                      #method='COBYLA',
+                      #method='Nelder-Mead',
+                      method='SLSQP',
                       tol=tol,
                       options = {'maxiter': max_iter,
-                                 'initial_simplex' : initial_simplex,
+                                 #'initial_simplex' : initial_simplex,
                                  },
                       )
     training_time = time.time() - start_time

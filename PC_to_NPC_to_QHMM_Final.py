@@ -93,7 +93,7 @@ from qiskit import QuantumCircuit
 from qiskit.circuit.library import real_amplitudes, efficient_su2
 from HMM.utils.qhmm_utils import statevector_result_getter
 
-result_getter = statevector_result_getter()
+result_getter = statevector_result_getter(rescaling_factor=1e6)
 
 
 initial_state = QuantumCircuit(1, name='Initial_State')
