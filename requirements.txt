@@ -1,0 +1,25 @@
+# Core scientific stack
+numpy==2.1.3
+pandas==2.2.3
+scipy==1.15.1
+scikit-learn==1.6.1
+matplotlib==3.10.0
+numba==0.61.0
+joblib==1.4.2
+
+# HMM / classical model dependencies
+hmmlearn==0.3.3
+arch>=7.0.0
+
+# Quantum stack used by QHMM
+qiskit==1.3.2
+qiskit-aer==0.16.0
+qiskit-ibm-runtime==0.34.0
+
+# Test dependencies
+ddt==1.7.2
+
+# Additional runtime support seen in the project environment
+autograd==1.7.0
+jax==0.5.0
+jaxlib==0.5.0
