@@ -15,5 +15,11 @@ limitations under the License.
 '''
 
 from .minimize_GARCH import minimize_GARCH
+from .calculate_garch_stationary_distribution import calculate_garch_stationary_distribution
+from .garch_theta_to_joint_matrix import garch_theta_to_joint_matrix
+from .minimize_garch_hmm import minimize_garch_hmm
 
-__all__ = ['minimize_GARCH']
+__all__ = ['minimize_GARCH',
+           'calculate_garch_stationary_distribution',
+           'garch_theta_to_joint_matrix',
+           'minimize_garch_hmm']

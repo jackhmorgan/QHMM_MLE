@@ -25,9 +25,18 @@ from qiskit.quantum_info import Statevector
 # log-likelihood for quantum circuits.
 class statevector_result_getter(result_getter):
     def __init__(self,
-                 rescaling_factor : float = 1.0
-              ):    
-        self.rescaling_factor = rescaling_factor   
+                 rescaling_factor : float = 1.0,
+                 log_sum : bool = False
+              ):
+        """
+        :param log_sum: If False (default, as in the original paper) the likelihood is the exact
+        probability of the whole sequence, a product of the per-step probabilities, and its log is
+        taken at the end; this underflows to -inf once the log likelihood falls below about -744.
+        If True the per-step log probabilities are summed instead, which gives the same value
+        without underflow.
+        """
+        self.rescaling_factor = rescaling_factor
+        self.log_sum = log_sum
         self.simulator = AerSimulator()
         self.save_state = True
 
@@ -76,6 +85,7 @@ class statevector_result_getter(result_getter):
         initial_state = circuit.data[0].operation
         #result = self.simulator.run(transpiled).result()
         likelihood = 1
+        log_likelihood = 0.0
         observed_qargs = [i for i in range(circuit.qregs[0].size, circuit.num_qubits)]
         hidden_qargs = [i for i in range(circuit.qregs[0].size)]
 
@@ -86,17 +96,22 @@ class statevector_result_getter(result_getter):
             sv = sv.evolve(bound_ansatz)
 
             probs = sv.probabilities(observed_qargs)
-            likelihood *= probs[sample]
-            if likelihood == 0:
-                break
-            
+            if self.log_sum:
+                if probs[sample] == 0:
+                    return float('-inf')
+                log_likelihood += np.log(probs[sample])
+            else:
+                likelihood *= probs[sample]
+                if likelihood == 0:
+                    break
+
             proj = np.zeros(len(probs), dtype=complex)
             proj[sample] = 1 / np.sqrt(probs[sample])
             sv = sv.evolve(Operator(np.diag(proj), input_dims=sv.dims(observed_qargs), output_dims=sv.dims(observed_qargs)), qargs=observed_qargs)
             sv = sv.reset(observed_qargs)
-        
 
+        if self.log_sum:
+            return float(log_likelihood)
         if likelihood == 0:
             return float('-inf')
-        else:
-            return float(np.log(likelihood))
+        return float(np.log(likelihood))

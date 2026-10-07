@@ -19,9 +19,11 @@ from .NPC_HMM import NPC_HMM
 from .PC_HMM import PC_HMM
 from .QHMM import QHMM
 from .GARCH import GARCH
+from .GARCH_HMM import GARCH_HMM
 
 __main__ = ['HMM',
             'NPC_HMM',
             'PC_HMM',
             'QHMM',
-            'GARCH']
+            'GARCH',
+            'GARCH_HMM']

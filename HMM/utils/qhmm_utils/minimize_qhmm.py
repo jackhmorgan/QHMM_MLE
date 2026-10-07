@@ -23,6 +23,7 @@ def minimize_qhmm(model,
                   theta_0 : list | np.ndarray,
                   max_iter : int = 100,
                   tol : float = 1e-6,
+                  method : str = 'SLSQP',
                   ):
     """
     The function `minimize_qhmm` optimizes a quantum hidden Markov model using a given model, sequence data,
@@ -37,6 +38,10 @@ def minimize_qhmm(model,
     2. `training_time`: The number of seconds taken for training the model.
     3. `training_curve`: A list containing the negative log-likelihood values at each iteration during
     training.
+
+    :param method: 'SLSQP' (default) or 'Nelder-Mead'. Nelder-Mead uses the original paper's initial
+    simplex (each parameter perturbed by 1) and tolerates -inf log likelihoods, which make SLSQP's
+    finite-difference gradient NaN.
     """
     
     training_curve = []
@@ -67,15 +72,14 @@ def minimize_qhmm(model,
     
     start_time = time.time()
     # Optimize
-    initial_simplex = generate_initial_simplex(theta_0, perturbation_size=1)
-    result = minimize(neg_log_likelihood, 
-                      theta_0, 
-                      #method='Nelder-Mead',
-                      method='SLSQP',
+    options = {'maxiter': max_iter}
+    if method == 'Nelder-Mead':
+        options['initial_simplex'] = generate_initial_simplex(theta_0, perturbation_size=1)
+    result = minimize(neg_log_likelihood,
+                      theta_0,
+                      method=method,
                       tol=tol,
-                      options = {'maxiter': max_iter,
-                                 #'initial_simplex' : initial_simplex,
-                                 },
+                      options = options,
                       )
     training_time = time.time() - start_time
     
