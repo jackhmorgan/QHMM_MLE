@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/nas/longleaf/home/jhmorga/QHMM_MLE/GARCH_to_PC_to_NPC_to_QHMM_revision.py", line 23, in <module>
+    from HMM import QHMM, PC_HMM, NPC_HMM, GARCH_HMM
+  File "/nas/longleaf/home/jhmorga/QHMM_MLE/HMM/__init__.py", line 18, in <module>
+    from .NPC_HMM import NPC_HMM
+  File "/nas/longleaf/home/jhmorga/QHMM_MLE/HMM/NPC_HMM.py", line 22, in <module>
+    from .utils.npc_utils.calculate_npc_volatilities import calculate_npc_volatilities
+  File "/nas/longleaf/home/jhmorga/QHMM_MLE/HMM/utils/__init__.py", line 17, in <module>
+    from .calculate_emission_matrix import calculate_emission_matrix
+  File "/nas/longleaf/home/jhmorga/QHMM_MLE/HMM/utils/calculate_emission_matrix.py", line 17, in <module>
+    from .calculate_steady_state import calculate_steady_state
+  File "/nas/longleaf/home/jhmorga/QHMM_MLE/HMM/utils/calculate_steady_state.py", line 20, in <module>
+    def calculate_steady_state(transition_matrix : np.ndarray | list[list]):
+TypeError: unsupported operand type(s) for |: 'type' and 'types.GenericAlias'
